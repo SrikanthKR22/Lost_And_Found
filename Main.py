@@ -11,10 +11,12 @@ import datalinnk_Connector
 def report():
     print("Lets Report!")
 
+    #\==--------Func-End--------==/#
 
 def search():
     print('Lets Search!')
 
+    #\==--------Func-End--------==/#
 
 def history():
 
@@ -62,10 +64,13 @@ def history():
         table.insert('', 'end', values=row)
     table.grid(row=0, column=0, sticky="nsew")
 
+    #\==--------Func-End--------==/#
 
 def go_home():
     history_page.grid_remove()
     home_page.grid(row=0, column=0)
+
+    #\==--------Func-End--------==/#
 
 
 #\=________________________________main________________________________/=#

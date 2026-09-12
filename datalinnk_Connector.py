@@ -15,7 +15,7 @@ def get_connection():
     if datalink is None or not datalink.is_connected():
         try:
             datalink = datawind.connect(**config_data)
-            print("Connection Secured! Datalink Active!")
+            print("\n[Connection Secured! Datalink Active!]\n")
         except Error as e:
             print("Cannot Connect To Datalink", e)
             datalink = None
