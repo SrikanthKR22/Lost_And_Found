@@ -15,60 +15,97 @@ def report():
 
     #Scaling for maximize
     report_page.grid_configure(row=0, column=0, sticky='nsew')
-    report_page.grid_rowconfigure(0,weight=1)
-    report_page.grid_columnconfigure(0, weight=1)
+    report_page.grid_columnconfigure(1, weight=3)
+    report_page.grid_columnconfigure(2, weight=4)
+    report_page.grid_rowconfigure(10, weight=3)
     report_page.configure(bg='black')
 
     #Header
-    HUD.Label(report_page, text= "Report Found Item", font=("Berlin Sans FB Demi", 50), bg='black', fg= 'orange').grid(row=0,column=1, padx=50, pady=(20, 50))
-    midspace = HUD.Label(report_page, text = ' ', font=("OCR A Extended", 20), bg='black', fg='white')
+    HUD.Label(report_page, text= "Report Found Item", font=("Berlin Sans FB Demi", 25), bg='black', fg= 'orange', anchor= 'n').grid(row=0,column=1, padx=20, pady=(0, 50))
 
     #|------------FORM-Srt------------|#
 
+    #|---Defaults-Srt---|#
+    midspace = HUD.Label(report_page, text = ' ', font=("OCR A Extended", 18), bg='black', fg='white',)
+
+    default_label_dict = {
+        'master': report_page,
+        'font': ("OCR A Extended", 12),
+        'bg': 'black',
+        'fg': 'white',
+        'anchor': 'w',
+        'width' : 75
+    }
+
+    default_label_grid_dict = {
+        'column': 0,
+        'padx': (15,0),
+        'pady': 10
+    }
+
+    default_entry_dict = {
+        'master': report_page,
+        'font': ("OCR A Extended", 12),
+        'bg': 'black',
+        'fg': 'white',
+        #'anchor' : 'e',
+        'width' : 75
+    }
+
+    default_entry_grid_dict = {
+        'column': 2,
+        'padx': (0,15)
+    }
+
+    #|---Defaults-End---|#
+
     #Date
-    HUD.Label(report_page, text= "On which date did you find the item (<dd/mm/yy> format): ", font=("OCR A Extended", 20), bg='black', fg='white').grid(row=1, column=0, pady=10)
-    midspace.grid(row=1,column=1)
-    date_entry = HUD.Entry(report_page, font=("OCR A Extended", 20), bg='black', fg='white')
-    date_entry.grid(row=1, column=2)
+    HUD.Label(text="On which date did you find the item (<dd/mm/yy> format): ", **default_label_dict).grid(row=1, **default_label_grid_dict)
+    midspace.grid(row=1, column=1)
+    date_entry = HUD.Entry(**default_entry_dict)
+    date_entry.grid(row=1, **default_entry_grid_dict)
+
 
     #Time
-    HUD.Label(report_page, text= "At what time did you find the item (<hh:mm> format): ", font=("OCR A Extended", 20), bg='black', fg='white').grid(row=2, column=0, pady=10)
-    midspace.grid(row=2,column=1)
-    time_entry = HUD.Entry(report_page, font=("OCR A Extended", 20), bg='black', fg='white')
-    time_entry.grid(row=2, column=2)
+    HUD.Label(text="At what time did you find the item (<hh:mm> format): ", **default_label_dict).grid(row=2, **default_label_grid_dict)
+    midspace.grid(row=2, column=1)
+    time_entry = HUD.Entry(**default_entry_dict)
+    time_entry.grid(row=2, **default_entry_grid_dict)
 
     #Area
-    HUD.Label(report_page, text= "In which area did you find the item: ", font=("OCR A Extended", 20), bg='black', fg='white').grid(row=3, column=0, pady=10)
-    midspace.grid(row=3,column=1)
-    area_entry = HUD.Entry(report_page, font=("OCR A Extended", 20), bg='black', fg='white')
-    area_entry.grid(row=3, column=2)
+    HUD.Label(text="In which area did you find the item: ", **default_label_dict).grid(row=3, **default_label_grid_dict)
+    midspace.grid(row=3, column=1)
+    area_entry = HUD.Entry(**default_entry_dict)
+    area_entry.grid(row=3, **default_entry_grid_dict)
 
     #Desc_Tags
-    HUD.Label(report_page, text= "Describe the item using relevant tags: (similar to: <colour>, <shape>, <brand>,....)", font=("OCR A Extended", 20), bg='black', fg='white').grid(row=4, column=0, pady=10)
-    midspace.grid(row=4,column=1)
-    desc_tags_entry = HUD.Entry(report_page, font=("OCR A Extended", 20), bg='black', fg='white')
-    desc_tags_entry.grid(row=4, column=2)
+    HUD.Label(text="Describe item using relevant tags (like: <colour>, <brand>,...): ", **default_label_dict).grid(row=4, **default_label_grid_dict)
+    midspace.grid(row=4, column=1)
+    desc_tags_entry = HUD.Entry(**default_entry_dict)
+    desc_tags_entry.grid(row=4, **default_entry_grid_dict)
 
     #Contact
-    HUD.Label(report_page, text= "Enter Either Email or Phone Number or Both", font=("OCR A Extended", 20), bg='black', fg='white').grid(row=5, column=0, pady=10)
-    midspace.grid(row=5,column=1)
+    HUD.Label(text="Enter either [Email] or [Phone Number] or [Both]",**default_label_dict).grid(row=5, **default_label_grid_dict)
+    midspace.grid(row=5, column=1)
 
     #Email
-    HUD.Label(report_page, text= "Enter your email address: ", font=("OCR A Extended", 20), bg='black', fg='white').grid(row=5, column=0, pady=10)
-    midspace.grid(row=6,column=1)
-    email_entry = HUD.Entry(report_page, font=("OCR A Extended", 20), bg='black', fg='white')
-    email_entry.grid(row=6, column=2)
+    HUD.Label(text="Enter your email address: ",**default_label_dict).grid(row=6, **default_label_grid_dict)
+    midspace.grid(row=6, column=1)
+    email_entry = HUD.Entry(**default_entry_dict)
+    email_entry.grid(row=6, **default_entry_grid_dict)
 
     #Phone
-    HUD.Label(report_page, text= "Enter your phone number: ", font=("OCR A Extended", 20), bg='black', fg='white').grid(row=6, column=0, pady=10)
-    midspace.grid(row=6,column=1)
-    phone_entry = HUD.Entry(report_page, font=("OCR A Extended", 20), bg='black', fg='white')
-    phone_entry.grid(row=7, column=2)
+    HUD.Label(text="Enter your phone number: ",**default_label_dict).grid(row=7, **default_label_grid_dict)
+    midspace.grid(row=7, column=1)
+    phone_entry = HUD.Entry(**default_entry_dict)
+    phone_entry.grid(row=7, **default_entry_grid_dict)
 
     #|------------FORM-End------------|#
 
+
     #Back Button
-    HUD.Button(report_page, text="Back", command= lambda: go_home(report_page)).grid(row=10, column=1)
+    HUD.Label(report_page, text='\n\n\n\n\n\n', bg = 'black').grid(row=10, column=1)
+    HUD.Button(report_page, text="Back", command= lambda: go_home(report_page)).grid(row=11, column=1)
 
     #\==--------Func-End--------==/#
 
@@ -87,7 +124,7 @@ def search():
     midspace = HUD.Label(search_page, text = ' ', font=("OCR A Extended", 20), bg='black', fg='white')
 
     #Back Button
-    HUD.Button(search_page, text="Back", command= lambda: go_home(search_page)).grid(row=10, column=1)
+    HUD.Button(search_page, text="Back", command= lambda: go_home(search_page), anchor='s').grid(row=15, column=1)
 
     #\==--------Func-End--------==/#
 
@@ -210,7 +247,6 @@ frame_list = [home_page, report_page, search_page, history_page]
 
 #HomepageLayout
 HUD.Label(home_page, text= "LOST AND FOUND", font=("Berlin Sans FB Demi", 75), bg='black', fg= 'orange').grid(row=0,column=0, padx=50, pady=(20, 75))
-home_page.grid_rowconfigure(1, minsize=30) #spacing
 HUD.Button(home_page, text= "Report a Lost Item", command= report, font=("Berlin Sans FB Demi", 40), bg='black', fg='green').grid(row=1, column=0, pady=15)
 HUD.Button(home_page, text= "Search for a Lost Item of Yours", command= search, font=("Berlin Sans FB Demi", 40), bg='black', fg='red').grid(row=2, column=0, pady=15)
 HUD.Button(home_page, text= "View history of items found through our App", command= history, font=("Berlin Sans FB Demi", 40), bg='black', fg = 'orange').grid(row=3, column=0, pady=(15,50), padx = 50)
