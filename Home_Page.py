@@ -4,6 +4,8 @@
 
 import tkinter as HUD
 import sys
+import os
+import shutil
 import Datalink
 import History_Page
 import Report_Page
@@ -13,6 +15,10 @@ import Search_Page
 
 def Quit():
     Datalink.disconnect_datalink()
+    if os.path.exists("Temp"):
+        shutil.rmtree("Temp")
+        os.makedirs("Temp")
+
     screen.destroy()
     sys.exit()
 
@@ -72,12 +78,21 @@ HUD.Button(
 
 HUD.Button(
     home_page, 
+    text= "View Your Reports",
+    #command= lambda: view_reports(home_page, history_page, screen),
+    font=("Berlin Sans FB Demi", 40),
+    bg='black',
+    fg = 'cyan'
+    ).grid(row=3, column=0, pady=15)
+
+HUD.Button(
+    home_page, 
     text= "View history of items found through our App",
     command= lambda: History_Page.history(home_page, history_page, screen),
     font=("Berlin Sans FB Demi", 40),
     bg='black',
     fg = 'orange'
-    ).grid(row=3, column=0, pady=(15,50), padx = 50)
+    ).grid(row=4, column=0, pady=(15,50), padx = 50)
 
 HUD.Button(
     home_page,
@@ -86,7 +101,7 @@ HUD.Button(
     font= ('Berlin Sans FB Demi', 30),
     bg= 'grey',
     fg= 'white',
-).grid(row=4, column=1, padx=(0,25), pady=5)
+).grid(row=5, column=1, padx=(0,25), pady=5)
 
 home_page.grid(row=0, column=0)
 screen.mainloop()
