@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Lost & Found",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Home_Page.py",
+            "console": "integratedTerminal"
+        }
+    ]
+}

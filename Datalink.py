@@ -1,6 +1,12 @@
+'''#|/////////////////////////////////////////////////////////////////////////////////|[<START>]|\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\|#'''
+
+#|\-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~|[<IMPORTS>]|-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~/|#
+
 import mysql.connector as datawind
 from mysql.connector import Error
 import password
+
+#|\-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~|[<FUNCTIONS>]|-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~/|#
 
 config_data = {
     'host' : 'localhost',
@@ -15,7 +21,7 @@ def get_connection():
     if datalink is None or not datalink.is_connected():
         try:
             datalink = datawind.connect(**config_data)
-            print("\n[Connection Secured! Datalink Active!]\n")
+            print("\n||||[Connection Secured! Datalink Active!]||||\n")
         except Error as e:
             print("Cannot Connect To Datalink", e)
             datalink = None
@@ -37,3 +43,5 @@ def disconnect_datalink():
     if datalink and datalink.is_connected():
         datalink.close()
         print("Disconnected From Datalink Successfully!")
+
+"""#|//////////////////////////////////////////////////////////////////////////////////|[<-END->]|\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\|#"""
