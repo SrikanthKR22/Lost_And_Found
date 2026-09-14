@@ -65,7 +65,7 @@ def search(home_page, search_page, screen):
         def search_engine(self):
 
             report_objs = self.get_report_objs()
-            max_match_score = 1 + len(self.tags) + len(self.other_tags)
+            max_match_score = int(bool(self.area)) + len(self.tags) + len(self.other_tags)
 
             #Date
             for report in report_objs.values():
@@ -91,7 +91,9 @@ def search(home_page, search_page, screen):
 
                     report.match_percent = (report.match_score/max_match_score) * 100
 
-            self.search_result = list(sorted(report_objs.values(), key=lambda item: item.match_percent, reverse=True))
+            self.search_result = list(sorted([report for report in report_objs.values() 
+                                            if not report.is_rejected and report.match_percent >= 10], 
+                                            key=lambda item: item.match_percent, reverse=True))
 
             search_result_page = HUD.Frame(screen)
             Search_Result_Page.search_result(home_page, search_result_page, screen, self)       
@@ -108,6 +110,7 @@ def search(home_page, search_page, screen):
             self.tags = values[4].lower().strip().replace(" ", "").split(',')
             self.email = values[5]
             self.phone = values[6]
+            self.picture_path = values[7]
             self.is_matched = values[8]
             self.is_rejected = False
 
