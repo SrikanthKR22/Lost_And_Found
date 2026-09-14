@@ -21,9 +21,9 @@ def get_connection():
     if datalink is None or not datalink.is_connected():
         try:
             datalink = datawind.connect(**config_data)
-            print("\n||||[Connection Secured! Datalink Active!]||||\n")
+            print("\n[Connection Secured! Datalink Active!]\n")
         except Error as e:
-            print("Cannot Connect To Datalink", e)
+            print("\n[Cannot Connect To Datalink]\n", e)
             datalink = None
     return datalink
 
@@ -42,6 +42,6 @@ def disconnect_datalink():
     global datalink
     if datalink and datalink.is_connected():
         datalink.close()
-        print("Disconnected From Datalink Successfully!")
+        print("\n[Disconnected From Datalink Successfully!]\n")
 
 """#|//////////////////////////////////////////////////////////////////////////////////|[<-END->]|\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\|#"""

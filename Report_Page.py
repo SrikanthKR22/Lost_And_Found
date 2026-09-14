@@ -9,11 +9,103 @@ import os
 import shutil
 import re
 from datetime import date
+import View_Reports_Page
 
 #|\-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~|[<FUNCTIONS>]|-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~/|#
 
-def report(home_page, report_page, screen):
+def report(home_page, report_page, view_reports_page, screen):
 
+    #|\-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~|[<CLASS>]|-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~/|#
+
+    class Reported_Item():
+
+        def __init__(self, entries):
+
+            self.date = entries['date_entry']
+            self.time = entries['time_entry']
+            self.area = entries['area_entry']
+            self.tags = entries['desc_tags_entry']
+            self.email = entries['email_entry']
+            self.phone = entries['phone_entry']
+            self.picture_path = entries['picture_path']
+
+            date_sql = f"20{self.date[2]:02d}-{self.date[1]:02d}-{self.date[0]:02d}"
+            time_sql = f"{self.time[0]:02d}:{self.time[1]:02d}:00"
+
+            insert_query = """
+                INSERT INTO Reported_Items
+                (Date, Time, Area, Desc_Tags, Email, Phone, Picture_Path)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """
+
+            insert_values = (
+                date_sql,
+                time_sql,
+                self.area,
+                ", ".join(self.tags),
+                self.email if self.email else None,
+                self.phone if self.phone else None,
+                self.picture_path
+            )
+
+            cursor = Datalink.get_cursor()
+            cursor.execute(insert_query, insert_values)
+
+            self.id = cursor.lastrowid
+
+            # ---------------- MOVE PICTURE ----------------
+
+            os.makedirs("Pictures", exist_ok=True)
+            old_name = os.path.basename(self.picture_path)
+            new_name = f"{self.id}_{old_name}"
+            new_path = os.path.join("Pictures", new_name)
+            shutil.move(self.picture_path, new_path)
+            self.picture_path = new_path
+
+            # ---------------- UPDATE PICTURE PATH ----------------
+
+            update_query = """
+                UPDATE Reported_Items
+                SET Picture_Path = %s
+                WHERE Id = %s
+            """
+
+            cursor.execute(update_query,(self.picture_path, self.id))
+            Datalink.commit()
+            Datalink.disconnect_datalink
+            report_page.grid_remove()
+
+        @classmethod
+        def from_database(cls, report):
+            obj = cls.__new__(cls)
+            obj.id = report[0]
+            obj.date = report[1]
+            obj.time = report[2]
+            obj.area = report[3]
+            obj.tags = report[4].split(", ")
+            obj.email = report[5]
+            obj.phone = report[6]
+            obj.picture_path = report[7]
+            return obj
+
+    '''#|\-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~|[<CLASS-END>]|-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~/|#'''  
+
+    #settign up old reports
+    def get_old_reports():
+        datalink_cursor = Datalink.get_cursor()
+        query = "SELECT * FROM Reported_Items"
+        datalink_cursor.execute(query)
+        your_reports = datalink_cursor.fetchall()
+        your_report_objs = []
+
+        for report_data in your_reports:
+            your_report_objs.append(Reported_Item.from_database(report_data))
+
+        return your_report_objs
+
+    your_report_objs = get_old_reports()
+
+    #bring in the report_page
     home_page.grid_remove()
 
     #Scaling for maximize
@@ -153,7 +245,7 @@ def report(home_page, report_page, screen):
     HUD.Button(
         master=report_page,
         text="Submit",
-        command=lambda: validate_entries__makecls(entries)
+        command=lambda: submit(entries)
     ).grid(row=10, column=2, padx=20, pady=20)
 
     error_label = HUD.Label(
@@ -179,14 +271,14 @@ def report(home_page, report_page, screen):
         error_text = "\n".join(f"• {error}" for error in errors)
         error_label.config(text=error_text)
 
-     #---#|]========================[FORM-Srt]========================[|#
+    #---#|]========================[FORM-End]========================[|#
 
 
     #Back Button
     HUD.Label(report_page, text='\n\n\n\n\n\n', bg = 'black').grid(row=15, column=1)
     HUD.Button(report_page, text="Back", command= lambda: go_home(report_page, home_page)).grid(row=16, column=1)
 
-    def validate_entries__makecls(entries):
+    def submit(entries):
 
         errors = []
         valid_entries = {}
@@ -258,18 +350,18 @@ def report(home_page, report_page, screen):
             return
         else:
             show_errors(['Form Submitted!'] + list(valid_entries.values()))
-        
-        return Reported_Item(valid_entries)
 
-    #]::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::[Func-End]::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::[#
+        your_report_objs.append(Reported_Item(valid_entries))
+        View_Reports_Page.view_reports(home_page, view_reports_page, screen, your_report_objs)
+        return
+
+#]::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::[Func-End]::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::[#
 
 def go_home(current_page, home_page):
     current_page.grid_remove()
     home_page.grid(row=0, column=0)
 
 #]::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::[Func-End]::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::[#
-
-#]::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::[Validator-Funcs]::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::[#
 
 def _isvalid_date(date_entry):
 
@@ -315,68 +407,5 @@ def _isvalid_time(time_entry):
     
 #]:::::::::::::::::::[Func-End]:::::::::::::::::::[#
 
-#|\-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~|[<CLASS>]|-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~/|#
-
-class Reported_Item():
-
-    def __init__(self, entries):
-
-        self.date = entries['date_entry']
-        self.time = entries['time_entry']
-        self.area = entries['area_entry']
-        self.tags = entries['desc_tags_entry']
-        self.email = entries['email_entry']
-        self.phone = entries['phone_entry']
-        self.picture_path = entries['picture_path']
-
-        date_sql = f"20{self.date[2]:02d}-{self.date[1]:02d}-{self.date[0]:02d}"
-        time_sql = f"{self.time[0]:02d}:{self.time[1]:02d}:00"
-
-        insert_query = """
-            INSERT INTO Reported_Items
-            (Date, Time, Area, Desc_Tags, Email, Phone, Picture_Path)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-        """
-
-        insert_values = (
-            date_sql,
-            time_sql,
-            self.area,
-            ", ".join(self.tags),
-            self.email if self.email else None,
-            self.phone if self.phone else None,
-            self.picture_path
-        )
-
-        cursor = Datalink.get_cursor()
-        cursor.execute(insert_query, insert_values)
-
-        self.id = cursor.lastrowid
-
-        # ---------------- MOVE PICTURE ----------------
-
-        os.makedirs("Pictures", exist_ok=True)
-        old_name = os.path.basename(self.picture_path)
-        new_name = f"{self.id}_{old_name}"
-        new_path = os.path.join("Pictures", new_name)
-        shutil.move(self.picture_path, new_path)
-        self.picture_path = new_path
-
-        # ---------------- UPDATE PICTURE PATH ----------------
-
-        update_query = """
-            UPDATE Reported_Items
-            SET Picture_Path = %s
-            WHERE Id = %s
-        """
-
-        cursor.execute(
-            update_query,
-            (self.picture_path, self.id)
-        )
-
-        # ---------------- COMMIT ----------------
-
-        Datalink.commit()
 
 """#|/////////////////////////////////////////////////////////////////////////////////|[<-END->]|\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\|#"""
