@@ -74,10 +74,9 @@ screen.bind('<F11>', toggle_fullscreen)
 home_page = HUD.Frame(screen, bg='black')
 report_page = HUD.Frame(screen)
 search_page = HUD.Frame(screen)
-search_result_page = HUD.Frame(screen)
 history_page = HUD.Frame(screen)
 view_reports_page = HUD.Frame(screen)
-frame_list = [home_page, report_page, search_page, view_reports_page, history_page, search_result_page]
+frame_list = [home_page, report_page, search_page, view_reports_page, history_page]
 
 #scaling for maximize
 home_page.grid_columnconfigure(0, weight=1)

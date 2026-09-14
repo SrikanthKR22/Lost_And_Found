@@ -5,7 +5,7 @@
 import tkinter as HUD
 import Datalink
 from datetime import date
-import Search_Results
+import Search_Result_Page
 
 #|\-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~|[<FUNCTIONS>]|-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~/|#
 
@@ -36,14 +36,13 @@ def search(home_page, search_page, screen):
     class Search_Item:
 
         def __init__(self, entries):
-            self.date = entries['date_entry']
-            self.time = entries['time_entry']
-            self.area = entries['area_entry']
-            self.email = entries['email_entry']
-            self.phone = entries['phone_entry']
+            self.date = entries['date']
+            self.time = entries['time']
+            self.area = entries['area']
+            self.email = entries['email']
+            self.phone = entries['phone']
             self.tags = entries['tags']
             self.other_tags = entries['other_tags']
-            self.reject = False
             self.search_engine()
 
         #]::::::::::::::::::::::::::::::::::[Func-End]::::::::::::::::::::::::::::::::::[#
@@ -87,13 +86,15 @@ def search(home_page, search_page, screen):
 
                     #Tags
                     for tag_self in self.tags + self.other_tags:
-                        if tag_self in report.tags:
+                        if tag_self.strip().lower() in report.tags:
                             report.match_score += 1
 
-                report.match_percent = (report.match_score/max_match_score) * 100
+                    report.match_percent = (report.match_score/max_match_score) * 100
 
-            self.search_result = '' # please
-            
+            self.search_result = list(sorted(report_objs.values(), key=lambda item: item.match_percent, reverse=True))
+
+            search_result_page = HUD.Frame(screen)
+            Search_Result_Page.search_result(home_page, search_result_page, screen, self)       
 
         #]::::::::::::::::::::::::::::::::::[Func-End]::::::::::::::::::::::::::::::::::[#
 
@@ -104,7 +105,7 @@ def search(home_page, search_page, screen):
             self.date = values[1]
             self.time = values[2]
             self.area = values[3]
-            self.tags = values[4].split(',')
+            self.tags = values[4].lower().strip().replace(" ", "").split(',')
             self.email = values[5]
             self.phone = values[6]
             self.is_matched = values[8]
