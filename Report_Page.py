@@ -117,7 +117,7 @@ def report(home_page, report_page, view_reports_page, screen):
     report_page.configure(bg='black')
 
     #Header
-    HUD.Label(report_page, text= "Report Found Item", font=("Berlin Sans FB Demi", 25), bg='black', fg= 'orange', anchor= 'n').grid(row=0,column=1, padx=20, pady=(0, 50))
+    HUD.Label(report_page, text= "Report Item You Found", font=("Berlin Sans FB Demi", 25), bg='black', fg= 'orange', anchor= 'n').grid(row=0,column=1, padx=20, pady=(0, 50))
 
     #---#|]========================[FORM-Srt]========================[|#
 

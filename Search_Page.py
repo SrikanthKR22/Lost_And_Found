@@ -161,19 +161,19 @@ def search(home_page, search_page, screen):
     #-------#|]=====[Defaults-End]=====[|#
 
     #Date
-    HUD.Label(text="On which date did you find the item (<dd/mm/yy> format, optional): ", **default_label_dict).grid(row=1, **default_label_grid_dict)
+    HUD.Label(text="On which date did you loose the item (<dd/mm/yy> format, optional): ", **default_label_dict).grid(row=1, **default_label_grid_dict)
     midspace.grid(row=1, column=1)
     date_entry = HUD.Entry(**default_entry_dict)
     date_entry.grid(row=1, **default_entry_grid_dict)
 
     #Time
-    HUD.Label(text="At what time did you find the item (<hh:mm> format, optional): ", **default_label_dict).grid(row=2, **default_label_grid_dict)
+    HUD.Label(text="At what time did you loose the item (<hh:mm> format, optional): ", **default_label_dict).grid(row=2, **default_label_grid_dict)
     midspace.grid(row=2, column=1)
     time_entry = HUD.Entry(**default_entry_dict)
     time_entry.grid(row=2, **default_entry_grid_dict)
 
     #Area
-    HUD.Label(text="In which area did you find the item (optional): ", **default_label_dict).grid(row=3, **default_label_grid_dict)
+    HUD.Label(text="In which area did you loose the item (optional): ", **default_label_dict).grid(row=3, **default_label_grid_dict)
     midspace.grid(row=3, column=1)
     area_entry = HUD.Entry(**default_entry_dict)
     area_entry.grid(row=3, **default_entry_grid_dict)
